@@ -3,7 +3,7 @@ import yaml
 import os
 from crewai import Crew, Agent, Task, Process
 from dotenv import load_dotenv
-from crewai_tools import SerperDevTool, PythonREPLTool  # Import CrewAI-compatible tools
+from crewai_tools import SerperDevTool  # Import available tools
 
 load_dotenv()  # Load environment variables
 
@@ -26,7 +26,7 @@ class Orchestrator:
 
     def create_agents(self):
         """Dynamically create agents from YAML definitions."""
-        agents = []
+        agents = {}
         for agent_name, agent_data in self.agents_config.items():
             tools = self.create_tools(agent_data.get('tools', []))
 
@@ -38,15 +38,13 @@ class Orchestrator:
                 tools=tools,  # Pass actual tool instances
                 verbose=True
             )
-            agents.append(agent)
-
+            agents[agent_name] = agent  # Store agents in a dictionary
         return agents
 
     def create_tools(self, tool_list):
         """Convert YAML-defined tools into actual CrewAI tool instances."""
         tool_mapping = {
             "search": SerperDevTool(),  # Web search tool
-            "code": PythonREPLTool(),   # Python code execution tool
         }
 
         tools = []
@@ -58,17 +56,23 @@ class Orchestrator:
         return tools
 
     def create_tasks(self):
-        """Dynamically create tasks from YAML definitions."""
+        """Dynamically create tasks from YAML definitions and assign them to appropriate agents."""
         tasks = []
         for task_name, task_data in self.tasks_config.items():
-            task = Task(
-                description=task_data['description'],
-                expected_output=task_data.get('expected_output', ''),
-                human_input=task_data.get('human_input', False),
-                max_iterations=task_data.get('max_iterations', 3)
-            )
-            tasks.append(task)
+            agent_key = task_data.get('assigned_agent')  # Get the agent name from the YAML
+            agent = self.agents.get(agent_key)  # Retrieve the corresponding agent
 
+            if agent:
+                task = Task(
+                    description=task_data['description'],
+                    expected_output=task_data.get('expected_output', ''),
+                    human_input=task_data.get('human_input', False),
+                    max_iterations=task_data.get('max_iterations', 3),
+                    agent=agent  # Assign the agent to the task
+                )
+                tasks.append(task)
+            else:
+                print(f"⚠️ Warning: No valid agent assigned for task '{task_name}', skipping.")
         return tasks
 
     async def get_user_input(self):
@@ -86,7 +90,7 @@ class Orchestrator:
 
             # Assemble the Crew using CrewAI’s built-in planning feature
             my_crew = Crew(
-                agents=self.agents,
+                agents=list(self.agents.values()),  # Convert dict to list
                 tasks=self.tasks,
                 process=Process.sequential,  # Switch to parallel if needed
                 planning=True,
