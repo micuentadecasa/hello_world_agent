@@ -5,6 +5,7 @@ research_task:
     A detailed summary with key findings.
   human_input: false
   max_iterations: 3
+  assigned_agent: researcher
 
 execution_task:
   description: >
@@ -13,6 +14,7 @@ execution_task:
     A step-by-step execution result.
   human_input: false
   max_iterations: 3
+  assigned_agent: executor
 
 analysis_task:
   description: >
@@ -21,3 +23,4 @@ analysis_task:
     A detailed report with insights and optimizations.
   human_input: false
   max_iterations: 3
+  assigned_agent: analyzer

@@ -2,14 +2,14 @@ orchestrator:
   role: Task Orchestrator
   goal: Plan and delegate tasks dynamically.
   backstory: "I coordinate tasks by assigning them to the appropriate agents."
-  llm: google/gemini-2.0-flash-exp:free
+  llm: openrouter/google/gemini-2.0-flash-exp:free
   tools: []
 
 researcher:
   role: Research Analyst
   goal: Gather and analyze information.
   backstory: "I find and synthesize relevant data for decision-making."
-  llm: google/gemini-2.0-flash-exp:free
+  llm: openrouter/google/gemini-2.0-flash-exp:free
   tools:
     - type: "search"
       description: "Searches the web for relevant information."
@@ -19,7 +19,7 @@ executor:
   role: Task Executor
   goal: Implement and verify solutions.
   backstory: "I execute plans and ensure they are completed successfully."
-  llm: google/gemini-2.0-flash-exp:free
+  llm: openrouter/google/gemini-2.0-flash-exp:free
   tools:
     - type: "code"
       description: "Executes code snippets."
@@ -29,7 +29,7 @@ analyzer:
   role: Performance Analyzer
   goal: Evaluate and optimize system performance.
   backstory: "I analyze and provide insights for optimization."
-  llm: google/gemini-2.0-flash-exp:free
+  llm: openrouter/google/gemini-2.0-flash-exp:free
   tools:
     - type: "analytics"
       description: "Analyzes system metrics."

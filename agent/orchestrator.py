@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from crewai_tools import SerperDevTool  # Import available tools
 
 load_dotenv()  # Load environment variables
-
+ 
 class Orchestrator:
     def __init__(self):
         """Initialize the Orchestrator by loading agent and task definitions."""
@@ -88,17 +88,23 @@ class Orchestrator:
                 print("👋 Goodbye!")
                 break
 
+
             # Assemble the Crew using CrewAI’s built-in planning feature
             my_crew = Crew(
                 agents=list(self.agents.values()),  # Convert dict to list
                 tasks=self.tasks,
                 process=Process.sequential,  # Switch to parallel if needed
                 planning=True,
-                planning_llm="google/gemini-2.0-flash-exp:free"  # Set Gemini for planning
+                planning_llm="openrouter/google/gemini-2.0-flash-exp:free"  # Set Gemini for planning
             )
 
+            print("Tasks in my_crew:", my_crew.tasks)
             # Run the planned execution
-            result = my_crew.kickoff()
+            try:
+                result = my_crew.kickoff()
+            except Exception as e:
+                print("Error during execution:", str(e))
+
             print("\n🎯 Execution Result:")
             print(result)
 
