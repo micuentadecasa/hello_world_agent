@@ -1,26 +1,23 @@
 research_task:
   description: >
-    Conduct thorough research on the given topic.
-    If human input is enabled, request validation at key decision points.
+    Conduct a research task on a given topic and gather relevant information.
   expected_output: >
-    Detailed research findings with human-validated insights
+    A detailed summary with key findings.
   human_input: false
   max_iterations: 3
 
 execution_task:
   description: >
-    Execute the specified task with precision.
-    If human input is enabled, request confirmation before critical steps.
+    Execute a specific task, such as implementing a solution.
   expected_output: >
-    Task execution results with human-approved actions
+    A step-by-step execution result.
   human_input: false
   max_iterations: 3
 
 analysis_task:
   description: >
-    Analyze the given data or scenario.
-    If human input is enabled, validate analysis approach and findings.
+    Perform analysis on a given data set or performance metrics.
   expected_output: >
-    Comprehensive analysis with human-validated conclusions
+    A detailed report with insights and optimizations.
   human_input: false
   max_iterations: 3

@@ -10,6 +10,8 @@ import asyncio
 load_dotenv()  # Load environment variables from .env file
 
 async def stream_openrouter_response(messages, model, progress_callback=None):
+    #print("messages", messages)
+    #print(f"openrouter api key: {os.getenv('OPENROUTER_API_KEY')}")
     """Stream responses directly from OpenRouter with progress tracking"""
     async with httpx.AsyncClient() as client:
         async with client.stream(
@@ -29,10 +31,14 @@ async def stream_openrouter_response(messages, model, progress_callback=None):
             },
             timeout=None
         ) as response:
+            #print("response", response)
             async for chunk in response.aiter_bytes():
                 if chunk:
                     try:
                         chunk_str = chunk.decode()
+                        #print(f"chunk_str {chunk_str}")
+                        if '"error"' in chunk_str:
+                            print(f"error: {chunk_str}")
                         if chunk_str.startswith('data: '):
                             chunk_data = json.loads(chunk_str[6:])
                             if chunk_data != '[DONE]':
